@@ -1,24 +1,49 @@
-# Project Desk back office
+# Project Desk Back Office
 
-This is a separate Vue 3 frontend for the existing Laravel project-management API. The Blade UI and its web routes are unchanged.
+A modern Vue 3 administrative frontend for the Laravel `project-management` API built with Vite, Vue Router, Pinia, Tailwind CSS v4, and Lucide Icons.
 
-## Run locally
+## Run Locally
 
 1. Start Laravel from the repository root, for example with `php artisan serve` (the default address is `http://127.0.0.1:8000`).
-2. In this `project-management-backoffice/` folder, install the packages with `npm install`.
-3. Start Vue with `npm run dev` and open the URL Vite prints (normally `http://localhost:5174`).
+2. In this `project-management-backoffice/` folder, install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   Open the printed URL (normally `http://localhost:5174`).
 
-The Vite development server proxies `/api` to `http://127.0.0.1:8000`. If Laravel runs elsewhere, set `LARAVEL_API_ORIGIN` in this folder's `.env` to its origin, without `/api`, for example `http://127.0.0.1:8080`.
+The Vite development server automatically proxies `/api` requests to `http://127.0.0.1:8000`. If Laravel runs on a different port or host, set `LARAVEL_API_ORIGIN` in this folder's `.env`, e.g.:
+```env
+LARAVEL_API_ORIGIN=http://127.0.0.1:8080
+```
 
-Sign in with an existing Laravel user account. The API issues a Sanctum bearer token; this frontend keeps it in `sessionStorage` for the current browser tab and sends it with API requests. Signing out revokes that token.
+## Features & Screens
 
-## Current screens
-
-- Overview with project and team totals and recent projects
-- Project search, create, edit, and delete
-- Project task creation, status updates, and deletion
-- Team directory
-
-The API currently does not expose user management, profile editing, team creation/editing, project member management, or comment management, so those actions are not included in this frontend.
-
-For a production deployment on a separate origin, configure the API URL with `VITE_API_BASE_URL` and configure Laravel CORS to allow the back-office origin. The existing token API is used here; cookie-based Sanctum SPA authentication would require additional Laravel stateful-domain and CSRF configuration.
+- **Authentication & Navigation**:
+  - Secure Sanctum token management with automatic expiration handling.
+  - Client-side routing with `vue-router` v4, route guards, and deep-linking (`/`, `/projects`, `/projects/:id`, `/teams`, `/login`).
+  - Centralized state management via **Pinia** stores (`auth`, `projects`, `teams`, `tasks`, `toast`).
+- **Overview Dashboard**:
+  - High-level metric cards (Total Projects, Active Projects, Teams, Completed Projects).
+  - Quick access to recent projects and connected teams.
+- **Projects Management**:
+  - Server-side search and status filtering (`planning`, `active`, `on_hold`, `completed`).
+  - Server-side pagination controls.
+  - Project creation, editing, and deletion with accessible confirmation modals.
+- **Project Detail View**:
+  - Deep-linked project summary with owner, team, and timeline badges.
+  - **Task Board & List View**: Toggle between a 4-column **Kanban Board** (`todo`, `in_progress`, `review`, `done`) and a structured **Task List**.
+  - **Task Management**: Create and edit tasks with descriptions, priority levels (`low`, `medium`, `high`, `urgent`), assignees, and due dates with overdue warnings.
+  - **Project Members**: Assign team members to projects with specific roles (`manager`, `member`).
+  - **Discussions / Comments**: Post and delete polymorphic discussion comments on projects and tasks.
+- **Teams Management**:
+  - Create, edit, and delete teams.
+  - Assign workspace users to teams.
+  - Member avatar stacks and project association counts.
+- **UI & UX Modernization**:
+  - Fully responsive utility-based design powered by **Tailwind CSS v4**.
+  - Crisp SVG iconography via **Lucide Icons**.
+  - Non-blocking confirmation dialogs and stacked toast notifications.
